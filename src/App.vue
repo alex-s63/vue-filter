@@ -1,32 +1,44 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div class="app">
+    <router-view />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Vue from 'vue'
+import { mapGetters, mapActions } from 'vuex'
 
-#nav {
-  padding: 30px;
+export default {
+  name: 'App',
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  watch: {
+    errorMessage() {
+      if (this.errorMessage) {
+        Vue.$toast.warning(this.errorMessage, {
 
-    &.router-link-exact-active {
-      color: #42b983;
+        })
+        this.clearErrorMessage()
+      }
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'errorMessage'
+    ])
+  },
+
+  methods: {
+    ...mapActions([
+      'clearErrorMessage'
+    ])
   }
+}
+</script>
+
+<style lang="scss">
+.app {
+  background-color: #F3F7FA;
+  min-height: 100vh;
 }
 </style>
