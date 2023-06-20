@@ -46,6 +46,15 @@ export default {
     }
   },
 
+  created() {
+    const { filter } = this.$route.query
+
+    if (filter) {
+      Array.isArray(filter) ? this.localFilterValues = filter.map(Number)
+        : this.localFilterValues = [parseInt(filter)]
+    }
+  },
+
   watch: {
     localFilterValues() {
       this.localFilterValues.length === INITIAL_FILTER_VALUES.length ? this.allTickets = true : this.allTickets = false
@@ -63,6 +72,7 @@ export default {
       },
       set(value) {
         this.setFilterValues(value)
+        this.setFilterQuery(value)
       }
     }
   },
@@ -74,6 +84,15 @@ export default {
 
     allTicketsChange() {
       this.allTickets ? this.localFilterValues = INITIAL_FILTER_VALUES : this.localFilterValues = []
+    },
+
+    setFilterQuery(query) {
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          filter: query
+        }
+      }).catch(error => { if (error.name !== 'NavigationDuplicated') { throw error } })
     }
   }
 }

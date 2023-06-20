@@ -1,12 +1,7 @@
 <template>
   <div class="sorting">
-    <button
-      v-for="(button, index) in sortingButtons"
-      :key="button.label"
-      class="sorting__btn"
-      :class="{ 'sorting__btn--active': button.active }"
-      @click="sortingClick(index)"
-      >
+    <button v-for="(button, index) in sortingButtons" :key="button.label" class="sorting__btn"
+      :class="{ 'sorting__btn--active': button.active }" @click="sortingClick(index)">
       {{ button.label }}
     </button>
   </div>
@@ -41,6 +36,15 @@ export default {
     }
   },
 
+  created() {
+    const { sorting } = this.$route.query
+    
+    if (sorting) {
+      this.localSortingValue = sorting
+      this.setActiveBtn(sorting)
+    }
+  },
+
   computed: {
     ...mapGetters([
       'sortingValue'
@@ -52,6 +56,7 @@ export default {
       },
       set(value) {
         this.setSortingValue(value)
+        this.setSortingQuery(value)
       }
     }
   },
@@ -62,12 +67,23 @@ export default {
     ]),
 
     sortingClick(index) {
-      this.sortingButtons.forEach(btn => {
-        btn.active = false
-      })
-
-      this.sortingButtons[index].active = true
+      this.setActiveBtn(this.sortingButtons[index].value)
       this.localSortingValue = this.sortingButtons[index].value
+    },
+
+    setSortingQuery(query) {
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          sorting: query
+        }
+      }).catch(error => { if (error.name !== 'NavigationDuplicated') { throw error } })
+    },
+
+    setActiveBtn(sortingValue) {
+      this.sortingButtons.forEach(btn => {
+        sortingValue === btn.value ? btn.active = true : btn.active = false
+      })
     }
   }
 }
@@ -80,7 +96,7 @@ export default {
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   margin-bottom: 20px;
-  
+
   &__btn {
     padding: 17px 0;
     text-align: center;
