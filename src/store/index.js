@@ -68,18 +68,6 @@ export default new Vuex.Store({
         commit('setErrorMessage', String(e))
         throw new Error(e)
       }
-    },
-
-    clearErrorMessage({ commit }) {
-      commit('clearErrorMessage')
-    },
-
-    setFilterValues({ commit }, value) {
-      commit('setFilterValues', value)
-    },
-
-    setSortingValue({ commit }, value) {
-      commit('setSortingValue', value)
     }
   },
 

@@ -12,7 +12,7 @@
 
 <script>
 import Checkbox from '../components/Checkbox.vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { INITIAL_FILTER_VALUES } from '../constants'
 
 export default {
@@ -68,7 +68,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
+    ...mapMutations([
       'setFilterValues'
     ]),
 

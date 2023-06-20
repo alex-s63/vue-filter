@@ -14,7 +14,7 @@
 
 <script>
 import { CHEAP_SORTING_VALUES, FAST_SORTING_VALUES, OPTIMAL_SORTING_VALUES } from '../constants'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Sorting',
@@ -57,7 +57,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
+    ...mapMutations([
       'setSortingValue'
     ]),
 

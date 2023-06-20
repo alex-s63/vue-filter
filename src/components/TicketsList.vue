@@ -56,7 +56,11 @@ export default {
             return prevDuration - nextDuration
           })
         case OPTIMAL_SORTING_VALUES:
-          return this.tickets
+          return this.tickets.toSorted((prevTicket, nextTicket) => {
+            const prevOptimalValue = this.getOptimalValue(prevTicket)
+            const nextOptimalValue = this.getOptimalValue(nextTicket)
+            return prevOptimalValue - nextOptimalValue
+          })
         default:
           return this.tickets
       }
@@ -71,6 +75,11 @@ export default {
 
     showMoreTickets() {
       this.ticketsToShowCount += DEFAULT_TICKETS_TO_SHOW_COUNT
+    },
+
+    getOptimalValue(ticket) {
+      return ticket.price * 0.01 + ticket.segments[0].duration +
+        ticket.segments[1].duration + (ticket.segments[0].stops.length + ticket.segments[1].stops.length) * 4
     }
   }
 }

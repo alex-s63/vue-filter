@@ -6,7 +6,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'App',
@@ -29,7 +29,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
+    ...mapMutations([
       'clearErrorMessage'
     ])
   }
