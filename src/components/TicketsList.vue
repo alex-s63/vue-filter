@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="tickets-list">
-      <TicketListItem v-for="ticket in ticketsToShow" :key="JSON.stringify(ticket)" :ticket="ticket" />
+      <TicketListItem v-for="(ticket, index) in ticketsToShow" :key="index" :ticket="ticket" />
     </div>
 
     <LoadMoreBtn :ticketsToShowCount="ticketsToShowCount" :showMoreTickets="showMoreTickets" />
@@ -31,38 +31,52 @@ export default {
   async created() {
     await this.getSearchId()
     await this.getAllTickets()
+    console.log(this.tickets)
   },
 
   computed: {
     ...mapGetters([
       'tickets',
-      'sortingValue'
+      'sortingValue',
+      'filterValues'
     ]),
 
-    ticketsToShow() {
-      return this.sortedTickets.slice(0, this.ticketsToShowCount)
+    ticketsByFilter() {
+      const result = []
+      this.filterValues.forEach((filterValue) => {
+        if (this.tickets.has(filterValue)) {
+          result.push(...this.tickets.get(filterValue))
+        }
+      })
+
+      return result
     },
 
+    ticketsToShow() {
+      return this.ticketsByFilter.slice(0, this.ticketsToShowCount)
+    },
+
+    // temporary unused
     sortedTickets() {
       switch (this.sortingValue) {
         case CHEAP_SORTING_VALUES:
-          return this.tickets.toSorted((prevTicket, nextTicket) => {
+          return this.ticketsByFilter.toSorted((prevTicket, nextTicket) => {
             return prevTicket.price - nextTicket.price
           })
         case FAST_SORTING_VALUES:
-          return this.tickets.toSorted((prevTicket, nextTicket) => {
+          return this.ticketsByFilter.toSorted((prevTicket, nextTicket) => {
             const prevDuration = prevTicket.segments[0].duration + prevTicket.segments[1].duration
             const nextDuration = nextTicket.segments[0].duration + nextTicket.segments[1].duration
             return prevDuration - nextDuration
           })
         case OPTIMAL_SORTING_VALUES:
-          return this.tickets.toSorted((prevTicket, nextTicket) => {
+          return this.ticketsByFilter.toSorted((prevTicket, nextTicket) => {
             const prevOptimalValue = this.getOptimalValue(prevTicket)
             const nextOptimalValue = this.getOptimalValue(nextTicket)
             return prevOptimalValue - nextOptimalValue
           })
         default:
-          return this.tickets
+          return this.ticketsByFilter
       }
     }
   },

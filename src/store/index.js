@@ -72,29 +72,27 @@ export default new Vuex.Store({
   },
 
   getters: {
-    errorMessage (state) {
+    errorMessage(state) {
       return state.error.errorMessage
     },
 
-    filterValues (state) {
+    filterValues(state) {
       return state.filterValues
     },
 
-    sortingValue (state) {
+    sortingValue(state) {
       return state.sortingValue
     },
 
-    tickets (state) {
-      // For all filter
-      if (state.filterValues.length === INITIAL_FILTER_VALUES.length) {
-        return state.tickets
-      }
+    tickets(state) {
+      const result = new Map()
 
-      return state.tickets.filter((ticket) => {
+      state.tickets.forEach((ticket) => {
         const maxStopsCount = Math.max(ticket.segments[0].stops.length, ticket.segments[1].stops.length)
-
-        return state.filterValues.includes(maxStopsCount)
+        result.has(maxStopsCount) ? result.get(maxStopsCount).push(ticket) : result.set(maxStopsCount, [ticket])
       })
+
+      return result
     }
   }
 })
