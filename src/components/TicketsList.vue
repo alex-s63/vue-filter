@@ -31,7 +31,6 @@ export default {
   async created() {
     await this.getSearchId()
     await this.getAllTickets()
-    console.log(this.tickets)
   },
 
   computed: {
